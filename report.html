@@ -13225,7 +13225,7 @@ div#notebook {
 </ul>
 </li>
 <li>What kind of rewards is the driving agent receiving?<ul>
-<li>Because the SmartCab always idle, there are two situation and correponding rewards:<ul>
+<li>Because the SmartCab always idle, there are two situations and corresponding rewards:<ul>
 <li>If Agent properly idles at red light, it will receive positive rewards.</li>
 <li>If Agent idles at green light with no oncoming traffic, it will receive negative rewards.</li>
 </ul>
@@ -13233,7 +13233,7 @@ div#notebook {
 </ul>
 </li>
 <li>How does the light changing color affect the rewards?<ul>
-<li>Red light =&gt; car sholud idle =&gt; If it does, it will get positive rewards.</li>
+<li>Red light =&gt; car should idle if there is left car and the left car would like to go forward =&gt; If it does, it will get positive rewards.</li>
 <li>Green light with no oncoming traffic =&gt; car should drive =&gt; If it idles,it will get negative rewards.</li>
 </ul>
 </li>
@@ -13281,7 +13281,7 @@ div#notebook {
 </li>
 <li>log_metrics  <ul>
 <li>set to True to log trial and simulation results to /logs</li>
-<li>If we want to check the log in file, inculding result, it sholud be set to True. Otherwise, we can only check log in console. </li>
+<li>If we want to check the log in file, including result, it should be set to True. Otherwise, we can only check log in console. </li>
 </ul>
 </li>
 </ul>
@@ -13296,7 +13296,7 @@ div#notebook {
 </ul>
 </li>
 <li>In the <em>planner.py Python file, will the 'next_waypoint() function consider the North-South or East-West direction first?</em>   <ul>
-<li>It will consier East-West direction first.</li>
+<li>It will consider East-West direction first.</li>
 </ul>
 </li>
 </ul>
@@ -13392,11 +13392,11 @@ Run the agent.py file after setting the flags from projects/smartcab folder inst
 </ul>
 </li>
 <li>Given that the agent is driving randomly, does the rate of reliability make sense?<ul>
-<li>Yes. In the figure, the average rate of reliabiliy is 10%, which is bad. Becuase the agent is driving randomly, so it is hard to reach destination in time, and the bad rate makes sense.</li>
+<li>Yes. In the figure, the average rate of reliability is 10%, which is bad. Because the agent is driving randomly, so it is hard to reach destination in time, and the bad rate makes sense.</li>
 </ul>
 </li>
 <li>What kind of rewards is the agent receiving for its actions? Do the rewards suggest it has been penalized heavily?<ul>
-<li>In testing trials, the average rewards is alwasys negative, which suggests that it has been penalized heavily.</li>
+<li>In testing trials, the average rewards is always negative, which suggests that it has been penalized heavily.</li>
 </ul>
 </li>
 <li>As the number of trials increases, does the outcome of results change significantly?<ul>
@@ -13404,7 +13404,7 @@ Run the agent.py file after setting the flags from projects/smartcab folder inst
 </ul>
 </li>
 <li>Would this Smartcab be considered safe and/or reliable for its passengers? Why or why not?<ul>
-<li>No. It whould be considered not safe and not reliable. It is dangerous based on the accident rate is high, and it is not reliable based on the rate of reliability is low. </li>
+<li>No. It would be considered not safe and not reliable. It is dangerous based on the accident rate is high, and it is not reliable based on the rate of reliability is low. </li>
 </ul>
 </li>
 </ul>
@@ -13452,7 +13452,7 @@ Run the agent.py file after setting the flags from projects/smartcab folder inst
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Answer:</strong></p>
+<p><strong>Refined Answer:</strong></p>
 <ul>
 <li>I think waypoint, light and oncoming are most relevant for learning both safety and efficiency.<ul>
 <li>Waypoint<ul>
@@ -13464,7 +13464,22 @@ Run the agent.py file after setting the flags from projects/smartcab folder inst
 </ul>
 </li>
 <li>Oncoming<ul>
-<li>I think it is important feature for satety. For example, if the light is green, a vehicle across the intersection can turn left under the traffic rule of light, and the Smartcab can drive forward under the traffic rule of light. However, there will be an accident in above situation. With Oncoming feature, Smartcab can know whether there is a vehicle across the intersection, and know intended action of the vehicle if the vehicle is present. The Smartcab can know it sholud idle when a vehicle presenting across the intersection wants to turn left at the green light.</li>
+<li>I think it is important feature for safety. For example, if the light is green, a vehicle across the intersection can turn left under the traffic rule of light, and the Smartcab can drive forward under the traffic rule of light. However, there will be an accident in above situation. With Oncoming feature, Smartcab can know whether there is a vehicle across the intersection, and know intended action of the vehicle if the vehicle is present. The Smartcab can know it should idle when a vehicle presenting across the intersection wants to turn left at the green light.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>The reason why I did not choose the following feature<ul>
+<li>Left<ul>
+<li>I think it is a feature for safety and efficiency, but it is less important than Waypoint, Light, and Oncoming. I did not choose it for the size of state. In most cases, 'left' is useless, such as smartcab will not have accident with the left car when the light is green as long as the left car obey the rule of light. It is useful when the light is red and Smartcab want to turn right, and the Smartcab can judge whether turn right based on whether the left car want to go forward to enhance safety and efficiency. </li>
+</ul>
+</li>
+<li>Right<ul>
+<li>I think it is useless feature when we use 'light' in state, as long as right car obey the rule of traffic. At red light, Smartcab will not have accident with the right car because the allowed action for smartcar is idling and turning right. At green light, Smartcab will not have accident with the right car as long as the right car obey the traffic rule, because the right car should yield Smartcab when Smartcar would like to go forward and the right car would like to turn right. </li>
+</ul>
+</li>
+<li>deadline<ul>
+<li>I think it is not appropriate feature. There are two reasons. One reason is that when we use it, the size of state will significantly increase. For example, if the destination is far from the starting point, and the max of deadline is 50, the size of state will multiply by 50 to make Q-learning inefficient. The other reason is that the smartcab may cause some minor accidents or major accidents when we use deadline as feature, which is to enhance reliability by sacrificing safety. In real world, if there is accident, the time took to deal with accident is more than the saving time of not obeying the traffic rule.</li>
 </ul>
 </li>
 </ul>
@@ -13624,11 +13639,11 @@ $$ \epsilon_{t+1} = \epsilon_{t} - 0.05, \hspace{10px}\textrm{for trial number }
 <p><strong>Answer:</strong></p>
 <ul>
 <li>Are there any observations that are similar between the basic driving agent and the default Q-Learning agent?<ul>
-<li>I think there is no observation that are similar between the basic driving agent and the default Q-learning angent. In basic driing agent, all statistic in the figures looks flat except that major accients looks gradually increasing. In default Q-learning agent, the total bad actions, major violation, minor violation, major accidents, and minor accidents are decreasing, and the rate of reliability and average reward are obviously increasing. Therefore, compared with basic drving, the default Q-learning agent has learning behavior which reflects the trial result.  </li>
+<li>I think there is no observation that are similar between the basic driving agent and the default Q-learning agent. In basic driving agent, all statistic in the figures looks flat except that major accidents looks gradually increasing. In default Q-learning agent, the total bad actions, major violation, minor violation, major accidents, and minor accidents are decreasing, and the rate of reliability and average reward are obviously increasing. Therefore, compared with basic driving, the default Q-learning agent has learning behavior which reflects the trial result.  </li>
 </ul>
 </li>
 <li>Approximately how many training trials did the driving agent require before testing? Does that number make sense given the epsilon-tolerance?<ul>
-<li>Approximately 20 training trails required for the driving agent before testing. The number make sense given the epsilon-tolerance, becuase the epsilon-tolerance is set to 0.05, and the epsilon is originally 1 and decreases by 0.05 in each training trial. (1 - 20*0.05 = 0 &lt; 0.05) </li>
+<li>Approximately 20 training trails required for the driving agent before testing. The number make sense given the epsilon-tolerance, because the epsilon-tolerance is set to 0.05, and the epsilon is originally 1 and decreases by 0.05 in each training trial. (1 - 20*0.05 = 0 &lt; 0.05) </li>
 </ul>
 </li>
 <li>Is the decaying function you implemented for  𝜖  (the exploration factor) accurately represented in the parameters panel?<ul>
@@ -13636,7 +13651,7 @@ $$ \epsilon_{t+1} = \epsilon_{t} - 0.05, \hspace{10px}\textrm{for trial number }
 </ul>
 </li>
 <li>As the number of training trials increased, did the number of bad actions decrease? Did the average reward increase?<ul>
-<li>As the number of tranining trials increased, the number of bad actions decreased, and the average reward increased.</li>
+<li>As the number of training trials increased, the number of bad actions decreased, and the average reward increased.</li>
 </ul>
 </li>
 <li>How does the safety and reliability rating compare to the initial driving agent?<ul>
@@ -13826,18 +13841,18 @@ I have tried some different parameter settings, and the following questions are 
 <li>I use     $\epsilon = \cos(at), \textrm{where } a = 0.01$</li>
 </ul>
 </li>
-<li>Approximately how many training trials were needed for your agent before begining testing?<ul>
-<li>Approximately 155 training trials were needed for my agent before begining testing. </li>
+<li>Approximately how many training trials were needed for your agent before beginning testing?<ul>
+<li>Approximately 155 training trials were needed for my agent before beginning testing. </li>
 </ul>
 </li>
 <li>What epsilon-tolerance and alpha (learning rate) did you use? Why did you use them?<ul>
-<li>Default of the epsilon-tolerance is 0.05 in Agent.py, and I set to 0.01, because I wolud like to let agent perform more training trails to learn policy.</li>
-<li>The defult of the learning rate is 0.5 in Agent.py,, and I set to 0.01 to let agent perform more training trials to leran policy. When learning rate is high, epsilon may quiclky reach toloerance threhold.</li>
+<li>Default of the epsilon-tolerance is 0.05 in Agent.py, and I set to 0.01, because I would like to let agent perform more training trails to learn policy.</li>
+<li>The default of the learning rate is 0.5 in Agent.py,, and I set to 0.01 to let agent perform more training trials to learn policy. When learning rate is high, epsilon may quickly reach tolerance threshold.</li>
 </ul>
 </li>
 <li>How much improvement was made with this Q-Learner when compared to the default Q-Learner from the previous section?<ul>
 <li>Safety rating: from D to A+</li>
-<li>Reliability ratin: from A to A+</li>
+<li>Reliability rating: from A to A+</li>
 </ul>
 </li>
 <li>Would you say that the Q-Learner results show that your driving agent successfully learned an appropriate policy?<ul>
@@ -13864,21 +13879,25 @@ I have tried some different parameter settings, and the following questions are 
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Question-8">Question 8<a class="anchor-link" href="#Question-8">&#182;</a></h3><p><strong>Answer:</strong></p>
+<h3 id="Question-8">Question 8<a class="anchor-link" href="#Question-8">&#182;</a></h3><p><strong>Refined Answer:</strong></p>
 <ol>
 <li><p>Please summarize what the optimal policy is for the smartcab in the given environment. What would be the best set of instructions possible given what we know about the environment? 
 _You can explain with words or a table, but you should thoroughly discuss the optimal policy.</p>
 <ul>
 <li>There are some assumption of optimal policy<ul>
-<li>Smartcab should obey the traffic rule of light. For example, smartcab should idle even there is no left and no right car at red light.</li>
-<li>Left car and right car obey the traffic rule of light. For example, they should not forward and should not turn left when their light is red. =&gt; The 'inputs:right' and 'inputs:left' can be neglected when 'light' is considered. </li>
-<li>There will be no accident when oncoming car turns right and smartcab turns left at green light. </li>
+<li>Smartcab should obey the traffic rule. Smartcab should not turn left or go forward at red light. Smartcab can turn right at red right when there is left car and the left car would not like to go forward.</li>
+<li>Left car and right car obey the traffic rule. They should not go forward and should not turn left when their light is red. Right car should yield smartcab when right car wants to turn right and smartcab want to go forward at the green light of smartcab. </li>
+<li>Because I did not choose 'Left' as state of feature, I assume that there is the left car and it would like to go forward at the red light of right car.</li>
+<li>Based on the code of environment.py.<ul>
+<li>There will be an accident when oncoming car turns right and smartcab turns left at green light </li>
 <li>There will be no accident when oncoming car turns left and smartcab turns left at green light. </li>
-<li>Car can turn right at green light (In US, driver can turn right at green light.)</li>
+<li>Smartcab sholud not idle at green light.</li>
+</ul>
+</li>
 <li>For safety, Smartcab should yield to oncoming car if their intended action are conflict.</li>
 </ul>
 </li>
-<li>I discuess the optionmal policy based on the state is (Waypoint, Light, inputs:oncoming).</li>
+<li>I discuss the optimal policy based on the state is (Waypoint, Light, inputs:oncoming).</li>
 <li>The following table is each state and its corresponding policy. </li>
 <li>In overall, Smartcab should consider 'Light' first to obey the traffic rule of light, and next to consider 'Oncoming' to prevent accident, and next to consider 'Waypoint' to drive in correct direction.</li>
 </ul>
@@ -13886,7 +13905,7 @@ _You can explain with words or a table, but you should thoroughly discuss the op
 <li><p>Next, investigate the <code>'sim_improved-learning.txt'</code> text file to see the results of your improved Q-Learning algorithm. <em>For each state that has been recorded from the simulation, is the <strong>policy</strong> (the action with the highest value) correct for the given state? Are there any states where the policy is different than what would be expected from an optimal policy?</em></p>
 <ul>
 <li>The investigation are in the following table.</li>
-<li>There are states where where the policy is different than what would be expected from an optimal policy, such as state {Waypoint:Right, Light:Red, Oncoming,Right} and {Waypoint:Right, Light:Red, Oncoming,None}</li>
+<li>There are states where the policy is different than what would be expected from an optimal policy, such as state {Waypoint:Right, Light:Red, Oncoming,Right} and {Waypoint:Right, Light:Red, Oncoming,None}</li>
 </ul>
 </li>
 <li><p>Provide a few examples from your recorded Q-table which demonstrate that your smartcab learned the optimal policy. Explain why these entries demonstrate the optimal policy.</p>
@@ -13897,7 +13916,7 @@ _You can explain with words or a table, but you should thoroughly discuss the op
 </li>
 <li><p>Try to find at least one entry where the smartcab did <em>not</em> learn the optimal policy.  Discuss why your cab may have not learned the correct policy for the given state.</p>
 <ul>
-<li>In the table, the state: {Waypoint:Right, Light:Red, Oncoming,None} smartcab did not learn optimal policy. The optinal policy is "Right", and it learned "None". It might learn it should idle as long as the light is red; however, it can turn right at red light in US.</li>
+<li>In the table, the state: {Waypoint:Left, Light:Green, Oncoming:Right} smartcab did not learn optimal policy. The optimal policy is "Forward", and it learned "Right". In this state, 'None' will cause violation because of green light, and 'Left' will cause accident. Both "Forward" and "Right" do not cause accident or violation as long as other car obey the traffic rule, and 'Forward' is optimal policy because waypoint is left. (The waypoint considers East-West direction first, and then consider North-South direction. In this state, 'Forward' may increase or decrease the distance in Y axis(North-South), and it maintains the distance in X axis(East-West). However, 'Right' maintains the distance in Y axis(North-South) but does increase the distance in X axis(East-West). Therefore, I think 'Forward' is optimal policy in this state.) We can see Q of 'forward' is positive but not higher than Q of 'right' in Q table. Therefore, the reason that the smartcab did not learned the optimal policy for this state may be that the number of training trial is not enough.</li>
 </ul>
 </li>
 </ol>
@@ -13917,10 +13936,10 @@ _You can explain with words or a table, but you should thoroughly discuss the op
 <td>Right</td>
 <td>Red</td>
 <td>Right</td>
-<td>Right</td>
+<td>None(For left car)</td>
 <td>forward:-0.50,left:-4.20,right:-0.14,None: 0.10</td>
 <td>None</td>
-<td>suboptimal</td>
+<td>optimal</td>
 </tr>
 <tr>
 <td>Left</td>
@@ -13953,7 +13972,7 @@ _You can explain with words or a table, but you should thoroughly discuss the op
 <td>Left</td>
 <td>Green</td>
 <td>Right</td>
-<td>Left</td>
+<td>Forward</td>
 <td>forward: 0.05,left:-0.78,right: 0.13,None:-0.14</td>
 <td>Right</td>
 <td>suboptimal</td>
@@ -13971,10 +13990,10 @@ _You can explain with words or a table, but you should thoroughly discuss the op
 <td>Right</td>
 <td>Red</td>
 <td>Left</td>
-<td>Right</td>
+<td>None(For left car)</td>
 <td>forward:-3.86,left:-2.55,right:-0.02,None: 0.43</td>
 <td>None</td>
-<td>suboptimal</td>
+<td>optimal</td>
 </tr>
 <tr>
 <td>Left</td>
@@ -14025,10 +14044,10 @@ _You can explain with words or a table, but you should thoroughly discuss the op
 <td>Right</td>
 <td>Red</td>
 <td>Forward</td>
-<td>Right</td>
+<td>None(For left car)</td>
 <td>forward:-1.51,left:-1.89,right:-1.00,None: 0.37</td>
 <td>None</td>
-<td>suboptimal</td>
+<td>optimal</td>
 </tr>
 <tr>
 <td>Left</td>
@@ -14079,10 +14098,10 @@ _You can explain with words or a table, but you should thoroughly discuss the op
 <td>Right</td>
 <td>Red</td>
 <td>None</td>
-<td>Right</td>
+<td>None(For left car)</td>
 <td>forward:-8.27,left:-5.00,right:-1.80,None: 0.50</td>
 <td>None</td>
-<td>suboptimal</td>
+<td>optimal</td>
 </tr>
 <tr>
 <td>Left</td>

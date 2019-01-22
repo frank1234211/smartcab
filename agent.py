@@ -81,7 +81,8 @@ class LearningAgent(Agent):
         # If it is not, create a new dictionary for that state
         #   Then, for each action available, set the initial Q-value to 0.0
         if self.learning:
-            self.Q[state] = self.Q.get(state, {None:0.0, 'forward':0.0, 'left':0.0, 'right':0.0})
+            if state not in self.Q.keys():
+                self.Q[state] = {None: 0.0, "forward": 0.0, "left": 0.0, "right": 0.0}
 
         return
 
